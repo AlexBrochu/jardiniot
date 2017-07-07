@@ -7,14 +7,13 @@
 #include <PubSubClient.h>
 #include <ESP8266WiFi.h>
 #include <string.h>   // strdup
-#include <CmdMessenger.h>
 
 #include <DNSServer.h>
 #include <ESP8266WebServer.h>
 #include "WiFiManager.h"  // ip pour se connecter: 192.168.4.1
 
-const char* ssid = "xxxxxxxxxxxxxxxx";
-const char* password = "xxxxxxxxxxxxxxxxxxx!";
+const char* ssid = "CedilleNetwork";
+const char* password = "Quiamanger2pommes!";
 
 // le préfix pour recevoir du API c'est control_
 const char* topic = "status_test";  // À remplacer par "Temperature" ou "Humidite"
@@ -22,71 +21,25 @@ const char* topicControl = "control_test";
 const char* serverip = "192.168.1.187";   // Rentrer l'IP du serveur MQTT ici
 int port = 1883;                  // Renter le port du serveyr MQTT ici
 
-// Attach a new CmdMessenger object to the default Serial port
-CmdMessenger cmdMessenger = CmdMessenger(Serial);
-WiFiClient wifiClient;
-PubSubClient client;
-
-// This is the list of recognized commands. These can be commands that can either be sent or received.
-// In order to receive, attach a callback function to these events
-enum
-{
-  kSetControl          , // Command to send a command to the Arduino for different sensor
-  kStatus              , // Command to receive status
-};
-
-// Callbacks define on which received commands we take action
-void attachCommandCallbacks()
-{
-  // Attach callback methods
-  cmdMessenger.attach(kStatus, OnStatus);
-  //cmdMessenger.attach(kSetControl, OnSetControl);
-}
-
-// Called when a received command has no attached function
-void OnStatus()
-{
-  String arduino_sensors;
-  while (Serial.available()) {
-    arduino_sensors = Serial.readString();
-  }
-  // Ce payload constitue une topic
-  String payload = "{";
-  if (arduino_sensors.length() > 0) {
-    payload += arduino_sensors;
-  }
-  payload += "}";
-
-  // Envoie du payload
-  if (client.connected()) {
-
-    if (client.publish(topic, (char*) payload.c_str())) {
-      //Serial.println("Publish ok");
-    }
-    else {
-      //Serial.println("Publish failed");
-    }
-  }
-}
-
-// Fait ce qu'il a à faire avec le message reçu de MQTT
-void callback(char* topic, byte* payload, unsigned int length)
-{
+// Fait ce qu'il a à faire avec le message reçu
+void callback(char* topic, byte* payload, unsigned int length) {
   char message_buff[100];
 
   // create character buffer with ending null terminator (string)
   int i = 0;
-  for(i = 0; i < length; i++) {
+  for(i=0; i<length; i++) {
     message_buff[i] = payload[i];
   }
   message_buff[i] = '\0';
 
   // Write to arduino
   String msgString = String(message_buff);
-  cmdMessenger.sendCmd(kSetControl, (String) msgString);
-  //Serial.write(msgString.c_str());
+  Serial.write(msgString.c_str());
 
 }
+
+WiFiClient wifiClient;
+PubSubClient client;
 
 // Convertit un adresse MAC en string
 String macToStr(const uint8_t* mac)
@@ -98,21 +51,19 @@ String macToStr(const uint8_t* mac)
   return result;
 }
 
-const char* getTopic(String type, String &clientName)
-{
+const char* getTopic(String type, String &clientName){
   clientName = "";
   // Generate client name based on MAC address and last 8 bits of microsecond counter
   clientName += type;
   uint8_t mac[6];
-  WiFi.macAddress(mac);
+  WiFi.macAddress(mac);   // status_5ccf7f88bae6    control_5ccf7f88bae6
   clientName += macToStr(mac);
   return clientName.c_str();   // note: strdup fait un malloc à l'interne
 }
 
 // Connexion au serveur MQTT après s'avoir connecté au WiFi
 // Il y aura plusieurs topics
-void setup()
-{
+void setup() {
   Serial.begin(9600);
 
   delay(10);
@@ -144,7 +95,9 @@ void setup()
     Serial.println("WiFi connecté!");
     Serial.println("adresse IP: ");
     Serial.println(WiFi.localIP());
-  } else {
+  }
+  else
+  {
     mqtt_server = custom_mqtt_server.getValue();
     serverip = strdup(mqtt_server.c_str());
   }
@@ -194,11 +147,46 @@ void setup()
   }
 }
 
-void loop()
-{
+void loop() {
   // Il faut faire un client loop pour obtenir les messages qui viennent du API
   client.loop();
 
-  // Process incoming serial data, and perform callbacks
-  cmdMessenger.feedinSerialData();
+  sendStatus();
+}
+
+void sendStatus(){
+  static int iteration = 0;
+
+  if(iteration == 0){
+    Serial.println(topic);
+  }
+
+  String arduino_sensors;
+  while (Serial.available()) {
+    arduino_sensors = Serial.readString();
+  }
+
+  // Ce payload constitue une topic
+  String payload = "{";
+  if (arduino_sensors.length() > 0)
+  {
+    payload += arduino_sensors;
+  }
+  payload += "}";
+
+  // Envoie du payload
+  if (client.connected()){
+
+    if (client.publish(topic, (char*) payload.c_str())) {
+      //Serial.println("Publish ok");
+    }
+    else {
+      //Serial.println("Publish failed");
+    }
+  }
+  // FIXME: Quand le ESP est seul, cela fonctionne normalement,
+  // mais sinon il attend 2 secondes après le Arduino et faire 2 itératons.
+  iteration++;
+  delay(2020);
+
 }
