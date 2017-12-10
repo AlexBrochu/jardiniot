@@ -1,7 +1,7 @@
 #include "include/motor/MotorStrategy.h" //include the declaration for this class
 
 //<<constructor>>
-MotorStrategy::MotorStrategy(int idController, ControllerType type, std::vector<InputPin*> inputPin, std::vector<int> outputPin): Controller(idController, type, inputPin, outputPin){
+MotorStrategy::MotorStrategy(int idController, ControllerType type, std::vector<String> inputPin, std::vector<int> outputPin): Controller(idController, type, inputPin, outputPin){
 }
 
 MotorStrategy::MotorStrategy(){

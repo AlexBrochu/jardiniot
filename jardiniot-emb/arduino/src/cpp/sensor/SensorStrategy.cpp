@@ -1,7 +1,7 @@
 #include "include/sensor/SensorStrategy.h" //include the declaration for this class
 
 //<<constructor>>
-SensorStrategy::SensorStrategy(int idController, ControllerType type, std::vector<InputPin*> inputPin, std::vector<int> outputPin): Controller(idController, type, inputPin, outputPin){
+SensorStrategy::SensorStrategy(int idController, ControllerType type, std::vector<String> inputPin, std::vector<int> outputPin): Controller(idController, type, inputPin, outputPin){
 }
 
 SensorStrategy::SensorStrategy(){
@@ -28,7 +28,7 @@ int SensorStrategy::write(){
     return 0;
 }
 
-void SensorStrategy::setInput(std::vector<InputPin*> input){
+void SensorStrategy::setInput(std::vector<String> input){
     this->inputPin.clear();
     this->inputPin = input;
 }

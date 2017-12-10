@@ -12,7 +12,7 @@ private:
 public:
     // constructor
     FanMotor();
-    FanMotor(int idController, std::vector<InputPin*> input);
+    FanMotor(int idController, std::vector<String> input);
     ~FanMotor();
 
     void reset();

@@ -4,7 +4,6 @@
 #include <Arduino.h>
 #include <string.h>
 #include "include/ControllerType.h"
-#include "include/command/InputPin.h"
 #include <StandardCplusplus.h>
 #include <vector>
 
@@ -18,7 +17,7 @@ private:
     int speed;
     ControllerType type;
     std::vector<int> outputPin;
-    std::vector<InputPin*> inputPin;
+    std::vector<String> inputPin;
 
     // Erreur flag
     bool errorInCommand;
@@ -43,7 +42,7 @@ public:
     int getSpeed();
     ControllerType getControllerType();
     std::vector<int> getOutputPin();
-    std::vector<InputPin*> getInputPin();
+    std::vector<String> getInputPin();
     String getError();
 
     String toString();

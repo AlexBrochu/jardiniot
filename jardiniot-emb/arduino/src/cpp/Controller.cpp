@@ -4,30 +4,12 @@
 Controller::Controller(){
 }
 
-Controller::Controller(int idController, ControllerType type, std::vector<InputPin*> inputPin, std::vector<int> outputPin){
+Controller::Controller(int idController, ControllerType type, std::vector<String> inputPin, std::vector<int> outputPin){
     this->idController = idController;
     this->inputPin = inputPin;
     this->outputPin = outputPin;
     this->type = type;
 }
-
-// Controller::Controller(int idController, ControllerType type, int output, int input){
-//     std::vector<int> outputList;
-//     if(output >= 0 && output <= 13){
-//         outputList.push_back(output);
-//     }
-//
-//     std::vector<int> inputList;
-//     if(input >= 0 && input <= 13){
-//         inputList.push_back(input);
-//     }
-//
-//     this->idController = idController;
-//     this->inputPin = inputList;
-//     this->outputPin = outputList;
-//     this->type = type;
-// }
-
 
 //<<destructor>>
 Controller::~Controller(){

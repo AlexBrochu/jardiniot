@@ -15,9 +15,9 @@ public:
     ControllerFactory();
     ~ControllerFactory();
 
-    SensorStrategy* createSensor(int idController, ControllerType type, int delay, std::vector<InputPin*> inputPin, std::vector<int> outputPin);
-    MotorStrategy* createMotor(int idController, ControllerType type, int delay, std::vector<InputPin*> inputPin, std::vector<int> outputPin);
-    Controller* createController(int idController, ControllerType ctrlType, int delay, std::vector<InputPin*> inputPin, std::vector<int> outputPin);
+    SensorStrategy* createSensor(int idController, ControllerType type, int delay, std::vector<String> inputPin, std::vector<int> outputPin);
+    MotorStrategy* createMotor(int idController, ControllerType type, int delay, std::vector<String> inputPin, std::vector<int> outputPin);
+    Controller* createController(int idController, ControllerType ctrlType, int delay, std::vector<String> inputPin, std::vector<int> outputPin);
 };
 
 #endif

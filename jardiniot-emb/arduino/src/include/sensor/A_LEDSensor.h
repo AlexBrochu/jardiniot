@@ -15,12 +15,13 @@ private:
     int blueValue = 255;
     int redValue = 255;
 public:
-    A_LEDSensor(int idController, std::vector<InputPin*> inputPins, std::vector<int> outputPins, int delay);
+    A_LEDSensor(int idController, std::vector<String> inputPins, std::vector<int> outputPins, int delay);
     ~A_LEDSensor();
 
     int read();
     int write();
-    void setInput(std::vector<InputPin*> input);
+    void setInput(std::vector<String> input);
+    void deleteInput();
 
     String toString();
 };

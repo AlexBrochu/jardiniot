@@ -3,9 +3,9 @@
 /**
     Les commandes, qui peuvent être reçues, doivent être du format suivant :
 
-    AJOUT :  id (int) a (CONTROLLER_TYPE) delay i (input1 value1 input2 value2) o (output1 output2)
+    AJOUT : id (int) a (CONTROLLER_TYPE) delay i (input1 value1 input2 value2) o (output1 output2)
     CONFIG: id (int) c (CONTROLLER_TYPE) delay i (input1 value1 input2 value2) o (output1 output2)
-    DELETE: CONFIG: id (int) d
+    DELETE: id (int) d
 
 */
 
@@ -22,6 +22,8 @@ JardinCommand::JardinCommand(String command){
     this->split(command, commandSplitted, ' ');
 
     this->validCommand(commandSplitted);
+
+    commandSplitted.clear();
 }
 
 JardinCommand::~JardinCommand(){
@@ -103,16 +105,13 @@ int JardinCommand::validCommandType(std::vector<String> &vecCommand){
 int JardinCommand::extractPin(int index, std::vector<String> &vecCommand, String exitCondition, bool isInput){
     int commandSize = vecCommand.size();
     for(index++;index < commandSize && vecCommand[index] != exitCondition; index++){
-        int pin = vecCommand[index].toInt();
-        if(JardinCommand::validConversionStrToInt(vecCommand[index], pin)){
-            if(isInput){
-                index++;
-                int value = vecCommand[index].toInt();
-                this->inputPin.push_back(new InputPin(pin, value));
-            }
-            else{
-                this->outputPin.push_back(pin);
-            }
+
+        if(isInput){
+            // this->inputPin.push_back(vecCommand[index]);
+        }
+        else{
+            int pin = vecCommand[index].toInt();
+            this->outputPin.push_back(pin);
         }
     }
     return index;
@@ -192,7 +191,7 @@ std::vector<int> JardinCommand::getOutputPin(){
     return this->outputPin;
 }
 
-std::vector<InputPin*> JardinCommand::getInputPin(){
+std::vector<String> JardinCommand::getInputPin(){
     return this->inputPin;
 }
 
@@ -219,7 +218,7 @@ String JardinCommand::toString(){
 
     str.concat(" InputPin = ");
     for(unsigned int i=0; i < this->inputPin.size(); i++){
-        str.concat(this->inputPin[i]->toString());
+        str.concat(this->inputPin[i]);
     }
     return str;
 }

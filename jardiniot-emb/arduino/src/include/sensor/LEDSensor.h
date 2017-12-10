@@ -9,7 +9,7 @@ class LEDSensor: public SensorStrategy {
 private:
     int ledPin;
 public:
-    LEDSensor(int idController, std::vector<InputPin*> input, std::vector<int> output, int delay);
+    LEDSensor(int idController, std::vector<String> input, std::vector<int> output, int delay);
     ~LEDSensor();
 
     int read();

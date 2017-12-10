@@ -1,10 +1,11 @@
 #include "include/motor/FanMotor.h"
 #include "include/ControllerType.h"//include the declaration for this class
+#include "include/util/InputSplitter.h"
 
 //<<constructor>>
-FanMotor::FanMotor(int idController, std::vector<InputPin*> input):MotorStrategy(){
-    fanPin = input[0]->getPin();
-    fanSpeed = input[0]->getValue();
+FanMotor::FanMotor(int idController, std::vector<String> input):MotorStrategy(){
+    fanPin = InputSplitter::getPin(input[0]);
+    fanSpeed = InputSplitter::getValue(input[0]);
 }
 
 //<<destructor>>

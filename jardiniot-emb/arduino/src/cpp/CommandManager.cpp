@@ -66,30 +66,33 @@ String CommandManager::modifyController(JardinCommand &jCommand){
             std::vector<SensorStrategy*>::iterator it;
             SensorStrategy* sc;
 
-            int index = this->getSensor(it, sc, idController);
-            // return "INDEX :" + String(index);
+            byte index = this->getSensor(it, sc, idController);
+
             // Si le sensor est trouvé le modifier
             if(index != -1){
                 // Modifier le senseur
                 this->sensorList[index]->modify(jCommand);
             }
+            delete it;
+            delete sc;
         }else if(Motor == controlType){
             std::vector<MotorStrategy*>::iterator it;
             MotorStrategy* mStrat;
 
-            int index = this->getMotor(it, mStrat, idController);
+            byte index = this->getMotor(it, mStrat, idController);
             // Si le sensor est trouvé le modifier
             if(index != -1){
                 // Modifier le senseur
                 this->motorList[index]->modify(jCommand);
             }
+            delete it;
+            delete mStrat;
         }
         else{
             // TODO
         }
 
     }
-
 
     return msg;
 }

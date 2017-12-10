@@ -13,7 +13,7 @@ public:
 
     // constructor
     MotorStrategy();
-    MotorStrategy(int idController, ControllerType type, std::vector<InputPin*> inputPin, std::vector<int> outputPin);
+    MotorStrategy(int idController, ControllerType type, std::vector<String> inputPin, std::vector<int> outputPin);
     MotorStrategy(int idController, ControllerType type, int output, int input);
     ~MotorStrategy();
 
